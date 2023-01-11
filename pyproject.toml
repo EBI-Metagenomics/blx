@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "blx"
-version = "0.1.4"
+version = "0.1.5"
 description = "Make BLOBs globally accessible"
 authors = ["Danilo Horta"]
 license = "MIT"
