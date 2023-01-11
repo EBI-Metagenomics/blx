@@ -41,6 +41,9 @@ class Client:
             progress.set_completed()
             return
 
+        if not self.has(cid):
+            raise ValueError(f"Content not found for CID {cid.hex()}.")
+
         file = str(output.resolve())
         self._minio.fget_object(env.BLX_BUCKET, cid.hex(), file, progress=progress)
         cache.put(cid, output)

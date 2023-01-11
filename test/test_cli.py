@@ -25,10 +25,8 @@ def test_put(tmp_path: Path):
     assert len(result.stdout.strip()) == 0
 
 
-def test_has(tmp_path: Path):
-    os.chdir(tmp_path)
-    write_hello_file()
-    result = runner.invoke(app, ["has", "--no-progress", HELLO_FILE_NAME])
+def test_has():
+    result = runner.invoke(app, ["has", HELLO_FILE_CID])
     assert result.exit_code == 0
     assert len(result.stdout.strip()) == 0
 

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from enum import IntEnum
 from pathlib import Path
+from typing import Optional
 
 import typer
 
@@ -9,6 +10,7 @@ from blx.cid import CID
 from blx.client import get_client
 from blx.digest import digest
 from blx.download import download
+from blx.meta import __version__
 from blx.service_exit import ServiceExit, register_service_exit
 from blx.upload import upload
 
@@ -27,31 +29,31 @@ PROGRESS_OPTION = typer.Option(
 )
 
 
+@app.callback(invoke_without_command=True)
+def cli(version: Optional[bool] = typer.Option(None, "--version", is_eager=True)):
+    if version:
+        print(__version__)
+        raise typer.Exit()
+
+
 @app.command()
-def has(file: Path, progress: bool = PROGRESS_OPTION):
+def has(cid: str):
     """
     Check if file exists.
     """
-    register_service_exit()
-
-    try:
-        cid = digest(file, progress)
-    except ServiceExit:
-        raise typer.Exit(EXIT_CODE.FAILURE)
-
-    client = get_client()
-    raise typer.Exit(EXIT_CODE.SUCCESS if client.has(cid) else EXIT_CODE.FAILURE)
+    found = get_client().has(CID(cid))
+    raise typer.Exit(EXIT_CODE.SUCCESS if found else EXIT_CODE.FAILURE)
 
 
 @app.command()
-def cid(file: Path, progress: bool = PROGRESS_OPTION):
+def cid(path: Path, progress: bool = PROGRESS_OPTION):
     """
     CID of file.
     """
     register_service_exit()
 
     try:
-        cid = digest(file, progress)
+        cid = digest(path, progress)
         typer.echo(cid.hex())
     except ServiceExit:
         raise typer.Exit(EXIT_CODE.FAILURE)
@@ -60,15 +62,15 @@ def cid(file: Path, progress: bool = PROGRESS_OPTION):
 
 
 @app.command()
-def put(file: Path, progress: bool = PROGRESS_OPTION):
+def put(path: Path, progress: bool = PROGRESS_OPTION):
     """
     Upload file.
     """
     register_service_exit()
 
     try:
-        cid = digest(file, progress)
-        upload(cid, file, progress)
+        cid = digest(path, progress)
+        upload(cid, path, progress)
     except ServiceExit:
         raise typer.Exit(EXIT_CODE.FAILURE)
 
@@ -76,15 +78,14 @@ def put(file: Path, progress: bool = PROGRESS_OPTION):
 
 
 @app.command()
-def get(sha256hex: str, file_output: Path, progress: bool = PROGRESS_OPTION):
+def get(cid: str, path: Path, progress: bool = PROGRESS_OPTION):
     """
     Download file.
     """
     register_service_exit()
 
     try:
-        cid = CID(sha256hex)
-        download(cid, file_output, progress)
+        download(CID(cid), path, progress)
     except ServiceExit:
         raise typer.Exit(EXIT_CODE.FAILURE)
 
