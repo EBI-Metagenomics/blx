@@ -10,17 +10,17 @@ __all__ = ["Env", "env"]
 
 @dataclass
 class Env:
-    BUCKET: str
-    HOST: str
-    ACCESS_KEY: str
-    SECRET_KEY: str
+    BLX_BUCKET: str
+    BLX_HOST: str
+    BLX_ACCESS_KEY: str
+    BLX_SECRET_KEY: str
 
 
 load_dotenv()
 
 env = Env(
-    os.getenv("BUCKET", "bucket-name"),
-    os.getenv("HOST", "s3.address.io"),
-    os.getenv("ACCESS_KEY", "access-key"),
-    os.getenv("SECRET_KEY", "secret-key"),
+    os.getenv("BLX_BUCKET", "bucket-name"),
+    os.getenv("BLX_HOST", "s3.address.io"),
+    os.getenv("BLX_ACCESS_KEY", "access-key"),
+    os.getenv("BLX_SECRET_KEY", "secret-key"),
 )

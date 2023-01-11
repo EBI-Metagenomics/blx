@@ -17,7 +17,7 @@ class Client:
 
     def exist(self, cid: CID):
         try:
-            self._minio.stat_object(env.BUCKET, cid.hex())
+            self._minio.stat_object(env.BLX_BUCKET, cid.hex())
         except S3Error as err:
             if err.code == "NoSuchKey":
                 return False
@@ -27,11 +27,11 @@ class Client:
 
     def put(self, cid: CID, input: Path, progress: Progress):
         file = str(input.resolve())
-        self._minio.fput_object(env.BUCKET, cid.hex(), file, progress=progress)
+        self._minio.fput_object(env.BLX_BUCKET, cid.hex(), file, progress=progress)
 
     def get(self, cid: CID, output: Path, progress: Progress):
         file = str(output.resolve())
-        self._minio.fget_object(env.BUCKET, cid.hex(), file, progress=progress)
+        self._minio.fget_object(env.BLX_BUCKET, cid.hex(), file, progress=progress)
 
 
 @lru_cache
@@ -41,4 +41,6 @@ def get_client():
 
 @lru_cache
 def get_minio():
-    return Minio(env.HOST, access_key=env.ACCESS_KEY, secret_key=env.SECRET_KEY)
+    return Minio(
+        env.BLX_HOST, access_key=env.BLX_ACCESS_KEY, secret_key=env.BLX_SECRET_KEY
+    )
