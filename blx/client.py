@@ -28,6 +28,10 @@ class Client:
         return True
 
     def put(self, cid: CID, input: Path, progress: Progress):
+        if self.has(cid):
+            progress.set_completed()
+            return
+
         file = str(input.resolve())
         self._minio.fput_object(env.BLX_BUCKET, cid.hex(), file, progress=progress)
 
@@ -36,6 +40,7 @@ class Client:
             shutil.copyfile(cache.get(cid), output)
             progress.set_completed()
             return
+
         file = str(output.resolve())
         self._minio.fget_object(env.BLX_BUCKET, cid.hex(), file, progress=progress)
         cache.put(cid, output)
