@@ -42,5 +42,5 @@ def digest(file: Path, progress: Progress) -> str:
         while data := f.read(BUFSIZE):
             progress.update(len(data))
             h.update(data)
-    progress.shutdown()
+    progress.shutdown(True)
     return h.hexdigest()
