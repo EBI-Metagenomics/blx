@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "flx"
+name = "blx"
 version = "0.1.0"
 description = "Make BLOBs globally accessible"
 authors = ["Danilo Horta"]
@@ -23,4 +23,4 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-flx = 'flx.cli:app'
+blx = 'blx.cli:app'

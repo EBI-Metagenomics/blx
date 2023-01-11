@@ -1,3 +1,3 @@
-# flx
+# blx
 
 Make BLOBs globally accessible.

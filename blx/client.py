@@ -4,9 +4,9 @@ from pathlib import Path
 from minio import Minio
 from minio.error import S3Error
 
-from flx.cid import CID
-from flx.env import env
-from flx.progress import Progress
+from blx.cid import CID
+from blx.env import env
+from blx.progress import Progress
 
 __all__ = ["Client", "get_client"]
 

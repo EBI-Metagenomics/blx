@@ -4,7 +4,7 @@ import hashlib
 import os
 from pathlib import Path
 
-from flx.progress import Progress
+from blx.progress import Progress
 
 __all__ = ["CID"]
 

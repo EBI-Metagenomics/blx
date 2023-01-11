@@ -3,7 +3,7 @@ from pathlib import Path
 
 from typer.testing import CliRunner
 
-from flx.cli import app
+from blx.cli import app
 
 runner = CliRunner()
 

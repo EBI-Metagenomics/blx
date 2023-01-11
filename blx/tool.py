@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from flx.cid import CID
-from flx.client import get_client
-from flx.progress import Progress
-from flx.service_exit import ServiceExit
+from blx.cid import CID
+from blx.client import get_client
+from blx.progress import Progress
+from blx.service_exit import ServiceExit
 
 __all__ = ["digest", "upload", "download"]
 

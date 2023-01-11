@@ -5,10 +5,10 @@ from pathlib import Path
 
 import typer
 
-from flx.cid import CID
-from flx.client import get_client
-from flx.service_exit import ServiceExit, register_service_exit
-from flx.tool import digest, download, upload
+from blx.cid import CID
+from blx.client import get_client
+from blx.service_exit import ServiceExit, register_service_exit
+from blx.tool import digest, download, upload
 
 __all__ = ["app"]
 
