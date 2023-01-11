@@ -1,5 +1,10 @@
 name: CI
 on: ["push", "pull_request"]
+env:
+  BUCKET: ${{ secrets.BUCKET }}
+  HOST: ${{ secrets.HOST }}
+  ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
+  SECRET_KEY: ${{ secrets.SECRET_KEY }}
 
 jobs:
   ci:
