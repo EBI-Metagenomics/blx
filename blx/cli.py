@@ -7,8 +7,10 @@ import typer
 
 from blx.cid import CID
 from blx.client import get_client
+from blx.digest import digest
+from blx.download import download
 from blx.service_exit import ServiceExit, register_service_exit
-from blx.tool import digest, download, upload
+from blx.upload import upload
 
 __all__ = ["app"]
 
@@ -26,7 +28,7 @@ PROGRESS_OPTION = typer.Option(
 
 
 @app.command()
-def exist(file: Path, progress: bool = PROGRESS_OPTION):
+def has(file: Path, progress: bool = PROGRESS_OPTION):
     """
     Check if file exists.
     """
@@ -38,7 +40,7 @@ def exist(file: Path, progress: bool = PROGRESS_OPTION):
         raise typer.Exit(EXIT_CODE.FAILURE)
 
     client = get_client()
-    raise typer.Exit(EXIT_CODE.SUCCESS if client.exist(cid) else EXIT_CODE.FAILURE)
+    raise typer.Exit(EXIT_CODE.SUCCESS if client.has(cid) else EXIT_CODE.FAILURE)
 
 
 @app.command()

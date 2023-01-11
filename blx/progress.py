@@ -30,6 +30,14 @@ class Progress(Thread):
             self._rich_bar.start_task(self._task)
         del object_name
 
+    def set_completed(self):
+        if self._total == -1:
+            self._total = 1
+            self._rich_bar.reset(self._task, total=self._total)
+            self._rich_bar.start_task(self._task)
+        self._rich_bar.update(self._task, completed=self._total)
+        self._rich_bar.refresh()
+
     def update(self, size: int):
         self._display_queue.put(size)
 

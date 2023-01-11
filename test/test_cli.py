@@ -25,10 +25,10 @@ def test_put(tmp_path: Path):
     assert len(result.stdout.strip()) == 0
 
 
-def test_exist(tmp_path: Path):
+def test_has(tmp_path: Path):
     os.chdir(tmp_path)
     write_hello_file()
-    result = runner.invoke(app, ["exist", "--no-progress", HELLO_FILE_NAME])
+    result = runner.invoke(app, ["has", "--no-progress", HELLO_FILE_NAME])
     assert result.exit_code == 0
     assert len(result.stdout.strip()) == 0
 
@@ -39,3 +39,13 @@ def test_cid(tmp_path: Path):
     result = runner.invoke(app, ["cid", "--no-progress", HELLO_FILE_NAME])
     assert result.exit_code == 0
     assert result.stdout.strip() == HELLO_FILE_CID
+
+
+def test_get(tmp_path: Path):
+    os.chdir(tmp_path)
+    result = runner.invoke(
+        app, ["get", "--no-progress", HELLO_FILE_CID, HELLO_FILE_NAME]
+    )
+    assert result.exit_code == 0
+    assert len(result.stdout.strip()) == 0
+    assert Path(HELLO_FILE_NAME).exists()
