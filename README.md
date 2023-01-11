@@ -1,3 +1,3 @@
 # flx
 
-Make BLOBs globally accesible.
+Make BLOBs globally accessible.

@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "flx"
 version = "0.1.0"
-description = ""
+description = "Make BLOBs globally accessible"
 authors = ["Danilo Horta"]
 license = "MIT"
 readme = "README.md"
