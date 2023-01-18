@@ -1,5 +1,6 @@
 import shutil
 from functools import lru_cache
+from os import PathLike
 from pathlib import Path
 
 from minio import Minio
@@ -27,15 +28,15 @@ class Client:
                 raise err
         return True
 
-    def put(self, cid: CID, input: Path, progress: Progress):
+    def put(self, cid: CID, input: str | PathLike[str], progress: Progress):
         if self.has(cid):
             progress.set_completed()
             return
 
-        file = str(input.resolve())
+        file = str(Path(input).resolve())
         self._minio.fput_object(env.BLX_BUCKET, cid.hex(), file, progress=progress)
 
-    def get(self, cid: CID, output: Path, progress: Progress):
+    def get(self, cid: CID, output: str | PathLike[str], progress: Progress):
         if cache.has(cid):
             shutil.copyfile(cache.get(cid), output)
             progress.set_completed()
@@ -44,9 +45,9 @@ class Client:
         if not self.has(cid):
             raise ValueError(f"Content not found for CID {cid.hex()}.")
 
-        file = str(output.resolve())
+        file = str(Path(output).resolve())
         self._minio.fget_object(env.BLX_BUCKET, cid.hex(), file, progress=progress)
-        cache.put(cid, output)
+        cache.put(cid, Path(output))
 
 
 @lru_cache

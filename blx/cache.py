@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 import shutil
 from functools import lru_cache
+from os import PathLike
 from pathlib import Path
 
 from platformdirs import user_cache_dir
@@ -20,7 +21,7 @@ def filepath(cid: CID):
 
 
 class Cache:
-    def put(self, cid: CID, file: Path):
+    def put(self, cid: CID, file: str | PathLike[str]):
         if not self.has(cid):
             shutil.copyfile(file, filepath(cid))
 

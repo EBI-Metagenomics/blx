@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import os
-from pathlib import Path
+from os import PathLike
 
 from blx.progress import Progress
 
@@ -24,7 +24,7 @@ class CID:
         self._sha256hex = sha256hex
 
     @classmethod
-    def from_file(cls, file: Path, progress: Progress):
+    def from_file(cls, file: str | PathLike[str], progress: Progress):
         return CID(digest(file, progress))
 
     def hex(self) -> str:
@@ -34,7 +34,7 @@ class CID:
         return x.hex() == self.hex()
 
 
-def digest(file: Path, progress: Progress) -> str:
+def digest(file: str | PathLike[str], progress: Progress) -> str:
     h = hashlib.sha256()
     size = os.path.getsize(file)
     progress.set_meta(size)
