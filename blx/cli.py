@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import importlib.metadata
 from enum import IntEnum
 from pathlib import Path
 from typing import Optional
@@ -10,7 +11,6 @@ from blx.cid import CID
 from blx.client import get_client
 from blx.digest import digest
 from blx.download import download
-from blx.meta import __version__
 from blx.service_exit import ServiceExit, register_service_exit
 from blx.upload import upload
 
@@ -32,7 +32,7 @@ PROGRESS_OPTION = typer.Option(
 @app.callback(invoke_without_command=True)
 def cli(version: Optional[bool] = typer.Option(None, "--version", is_eager=True)):
     if version:
-        print(__version__)
+        typer.echo(importlib.metadata.version(__package__))
         raise typer.Exit()
 
 

@@ -11,8 +11,6 @@ from platformdirs import user_cache_dir
 from blx.cid import CID
 from blx.digest import digest
 
-from .meta import __author__, __name__
-
 __all__ = ["cache"]
 
 
@@ -50,6 +48,6 @@ cache = Cache()
 
 @lru_cache
 def get_cache_dir() -> Path:
-    dir = user_cache_dir(__name__, __author__)
+    dir = user_cache_dir()
     os.makedirs(dir, exist_ok=True)
     return Path(dir)
