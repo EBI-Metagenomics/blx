@@ -19,8 +19,8 @@ class Env:
 load_dotenv()
 
 env = Env(
-    os.getenv("BLX_BUCKET", "bucket-name"),
-    os.getenv("BLX_HOST", "s3.address.io"),
-    os.getenv("BLX_ACCESS_KEY", "access-key"),
-    os.getenv("BLX_SECRET_KEY", "secret-key"),
+    os.getenv("BLX_BUCKET", "blx"),
+    os.getenv("BLX_HOST", "s3.danilohorta.me"),
+    os.getenv("BLX_ACCESS_KEY", ""),
+    os.getenv("BLX_SECRET_KEY", ""),
 )
