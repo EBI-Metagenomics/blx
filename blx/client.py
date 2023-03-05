@@ -1,16 +1,12 @@
-import shutil
 from functools import lru_cache
-from os import PathLike
 from pathlib import Path
-from typing import Union
 
 from minio import Minio
 from minio.error import S3Error
 
-from blx.cache import cache
 from blx.cid import CID
 from blx.env import env
-from blx.progress import Progress
+from blx.filepath import FilePath
 
 __all__ = ["Client", "get_client"]
 
@@ -21,7 +17,7 @@ class Client:
 
     def has(self, cid: CID):
         try:
-            self._minio.stat_object(env.BLX_BUCKET, cid.hex())
+            self._minio.stat_object(env.BLX_BUCKET, cid.sha256hex)
         except S3Error as err:
             if err.code == "NoSuchKey":
                 return False
@@ -29,26 +25,13 @@ class Client:
                 raise err
         return True
 
-    def put(self, cid: CID, input: Union[str, PathLike[str]], progress: Progress):
-        if self.has(cid):
-            progress.set_completed()
-            return
+    def put(self, cid: CID, filename: FilePath, progress=None):
+        file = Path(filename)
+        self._minio.fput_object(env.BLX_BUCKET, cid.sha256hex, file, progress=progress)
 
-        file = str(Path(input).resolve())
-        self._minio.fput_object(env.BLX_BUCKET, cid.hex(), file, progress=progress)
-
-    def get(self, cid: CID, output: Union[str, PathLike[str]], progress: Progress):
-        if cache.has(cid):
-            shutil.copyfile(cache.get(cid), output)
-            progress.set_completed()
-            return
-
-        if not self.has(cid):
-            raise ValueError(f"Content not found for CID {cid.hex()}.")
-
-        file = str(Path(output).resolve())
-        self._minio.fget_object(env.BLX_BUCKET, cid.hex(), file, progress=progress)
-        cache.put(cid, Path(output))
+    def get(self, cid: CID, filename: FilePath, progress=None):
+        file = str(Path(filename))
+        self._minio.fget_object(env.BLX_BUCKET, cid.sha256hex, file, progress=progress)
 
 
 @lru_cache

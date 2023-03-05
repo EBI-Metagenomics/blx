@@ -1,19 +1,29 @@
 from __future__ import annotations
 
 import signal
+from signal import SIGINT, SIGTERM, Signals
+from typing import List
 
-__all__ = ["ServiceExit", "register_service_exit"]
+import typer
+
+__all__ = ["service_exit"]
 
 
-class ServiceExit(Exception):
-    pass
+def raise_exit(*_):
+    raise typer.Exit(1)
 
 
-def register_service_exit():
-    def raise_service_exit(signum, frame):
-        del signum
-        del frame
-        raise ServiceExit
+class service_exit:
+    def __init__(self, signals: List[Signals] = [SIGTERM, SIGINT]):
+        self._signals = signals
+        self._handlers: List[signal._HANDLER] = []
 
-    signal.signal(signal.SIGTERM, raise_service_exit)
-    signal.signal(signal.SIGINT, raise_service_exit)
+    def __enter__(self):
+        for x in self._signals:
+            self._handlers.append(signal.getsignal(x))
+            signal.signal(x, raise_exit)
+        return self
+
+    def __exit__(self, *_):
+        for x, y in zip(self._signals, self._handlers):
+            signal.signal(x, y)
