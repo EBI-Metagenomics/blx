@@ -10,7 +10,7 @@ from rich.progress import track
 from typer import Argument, Exit, Option, Typer, echo
 
 from blx.cid import CID
-from blx.client import get_client
+from blx.app import BLXApp
 from blx.file_digest import FileDigest
 from blx.progress import Progress
 from blx.regex import SHA256HEX_REGEX
@@ -50,7 +50,7 @@ def has(cid: str):
     """
     Check if file exists.
     """
-    raise Exit(0 if get_client().has(CID(sha256hex=cid)) else 1)
+    raise Exit(0 if BLXApp().has(CID(sha256hex=cid)) else 1)
 
 
 @app.command()
@@ -78,13 +78,13 @@ def put(path: Path, progress: bool = O_PROGRESS):
                 chunk.update()
         cid = digest.cid
 
-        clt = get_client()
-        if clt.has(cid):
+        blx = BLXApp()
+        if blx.has(cid):
             raise Exit()
 
         with Progress("Upload", disable=not progress) as pbar:
             try:
-                clt.put(cid, path, pbar)
+                blx.put(cid, path, pbar)
             finally:
                 pbar.shutdown()
 
@@ -95,12 +95,12 @@ def get(cid: str, path: Path, progress: bool = O_PROGRESS):
     Download file.
     """
     with service_exit():
-        clt = get_client()
-        if not clt.has(CID(sha256hex=cid)):
+        blx = BLXApp()
+        if not blx.has(CID(sha256hex=cid)):
             raise Exit(1)
 
         with Progress("Download", disable=not progress) as pbar:
             try:
-                clt.get(CID(sha256hex=cid), path, pbar)
+                blx.get(CID(sha256hex=cid), path, pbar)
             finally:
                 pbar.shutdown()

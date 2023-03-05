@@ -8,10 +8,10 @@ from blx.cid import CID
 from blx.env import env
 from blx.filepath import FilePath
 
-__all__ = ["Client", "get_client"]
+__all__ = ["BLXApp"]
 
 
-class Client:
+class BLXApp:
     def __init__(self):
         self._minio = get_minio()
 
@@ -32,11 +32,6 @@ class Client:
     def get(self, cid: CID, filename: FilePath, progress=None):
         file = str(Path(filename))
         self._minio.fget_object(env.BLX_BUCKET, cid.sha256hex, file, progress=progress)
-
-
-@lru_cache
-def get_client():
-    return Client()
 
 
 @lru_cache
